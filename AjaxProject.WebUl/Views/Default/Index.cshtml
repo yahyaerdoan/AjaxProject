@@ -1,1 +1,89 @@
 ﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<h3 class="alert alert-primary">Ajax Operations</h3>
+
+<button class="btn btn-outline-primary" id="btnlist" type="button">List</button>
+<button class="btn btn-outline-info" id="btncreate" type="button">Create</button>
+<button class="btn btn-outline-danger" id="btndelete" type="button">Delete</button>
+<button class="btn btn-outline-warning" id="btnget" type="button">Get</button>
+<button class="btn btn-outline-success" id="btnupdate" type="button">Update</button>
+
+<hr />
+
+<div class="alert alert-info">Product list</div>
+<div id="productlist">
+
+</div>
+
+<hr />
+
+<div>
+    <div class="alert alert-info">Create new product</div>
+    <input type="text" id="txtname" placeholder="name" class="form-control"/>
+    <br/>
+    <input type="text" id="txtstock" placeholder="stock" class="form-control" />
+    <br />
+    <input type="text" id="txtprice" placeholder="price" class="form-control" />
+    <br />
+</div>
+
+
+
+
+<script>
+    $("#btnlist").click(function () {
+        $.ajax({
+            contentType: "application/json",
+            dataType: "json",
+            type: "Get",
+            url: "/Default/ProductList/",
+            success: function (products) {
+                let values = jQuery.parseJSON(products);
+                console.log(values);
+
+                let tablehtml = "<table class=table table-bordered>"
+                    + "<tr>"
+                    + "<th>Product Id</th>"
+                    + "<th>Name</th>"
+                    + "<th>Stock</th>"
+                    + "<th>Price</th>"
+                    + "</tr>";
+                $.each(values, (index, value) => {
+                    tablehtml += `<tr>`
+                        + `<td>${value.ProductId}</td>`
+                        + `<td>${value.Name}</td>`
+                        + `<td>${value.Stock}</td>`
+                        + `<td>${value.Price}</td>`
+                        + `</tr>`
+                });
+                tablehtml += "</table>";
+                $("#productlist").html(tablehtml);
+            }
+        });
+    });
+
+    $("#btncreate").click(function () {
+        let productvalues = {
+            Name: $("#txtname").val(),
+            Stock: $("#txtstock").val(),
+            Price: $("#txtprice").val()
+        };
+
+        $.ajax({
+            type: "post",
+            url: "/Default/CreateProduct/",
+            data: productvalues,
+            success: function (products) {
+                let result = jQuery.parseJSON(products);
+                swal("Great!", "product added!", "success");
+            }
+        });
+    });
+
+</script>
