@@ -33,8 +33,30 @@
     <br />
 </div>
 
+<div>
+    <div class="alert alert-info">Delete Product</div>
+    <input type="text" id="txtdeletedid" placeholder="enter id to delete" class="form-control" />
+    <br />  
+</div>
 
+<div>
+    <div class="alert alert-info"></div>
+    <input type="text" id="txtgetbyid" placeholder="enter id to delete" class="form-control" />
+    <br />
+</div>
 
+<div class="alert alert-info">Get Product By Id</div>
+<div id="productlistbyid">
+    <input type="text" id="getproductid" placeholder="enter product id" class="form-control" />
+</div>
+
+<div class="alert alert-info">Update Product By Id</div>
+<div id="productlistbyida">
+    <input type="text" id="txteditid" placeholder="enter product id" class="form-control" />
+    <input type="text" id="txteditprice" placeholder="enter product id" class="form-control" />
+    <input type="text" id="txteditname" placeholder="enter product id" class="form-control" />
+    <input type="text" id="txteditstock" placeholder="enter product id" class="form-control" />
+</div>
 
 <script>
     $("#btnlist").click(function () {
@@ -86,4 +108,47 @@
         });
     });
 
+    $("#btndelete").click(x => {
+        let id = $("#txtdeletedid").val();
+        $.ajax({
+            url: "/Default/DeleteProduct/" + id,
+            type: "post",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (funk3) {
+                alert("product deleted");
+            }
+        });
+    });
+
+    $("#btnget").click(x => {
+        let id = $("#getproductid").val();
+        $.ajax({
+            contentType: "application/json",
+            dataType: "json",
+            type: "Get",
+            url: "/Default/GetProduct/" + id,
+            success: function (funk4) {
+                let result = jQuery.parseJSON(funk4);
+                console.log(result);
+            }
+        });
+    });
+
+    $("#btnupdate").click(function () {
+        let values = {
+            ProductId: $("#txteditid").val(),
+            Price: $("#txteditprice").val(),
+            Name: $("#txteditname").val(),
+            Stock: $("#txteditstock").val()
+        };
+        $.ajax({
+            type: "post",
+            url: "/Default/UpdateProduct/",
+            data: values,
+            success: function (funk5) {
+                swal("Great!", "product updated!", "success");
+            }
+        });
+    });
 </script>
